@@ -24,7 +24,27 @@ root.append(machine, spinButton, result);
 spinButton.addEventListener("click", async () => {
   spinButton.disabled = true;
   // Promise.all([wheel1.spin(), wheel2.spin(), wheel3.spin()]);
-
+  try {
+    result.setSpinning();
+    const symbols = await Promise.all([
+      wheel1.spin(),
+      wheel2.spin(),
+      wheel3.spin(),
+    ]);
+    let maxCount = getMaxCount(symbols);
+    console.log({ maxCount });
+    if (maxCount === 3) {
+      result.setResult(100);
+    } else if (maxCount === 2) {
+      result.setResult(10);
+    } else if (maxCount === 1) {
+      result.setResult(0);
+    }
+    console.log(symbols); // [value1, value2, value3]
+  } catch (error) {
+    result.setMachineChoked();
+    console.error(error);
+  }
 
   /**
    * Hint 1:
